@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blip — Privacy Policy</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      color: #18181b;
+      background: #fafafa;
+    }
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    h1 { font-size: 2rem; margin: 0 0 4px; }
+    .meta { color: #71717a; font-size: 0.9rem; margin: 0 0 40px; }
+    h2 { font-size: 1.15rem; margin: 40px 0 8px; border-bottom: 1px solid #e4e4e7; padding-bottom: 6px; }
+    p, li { margin: 0 0 14px; }
+    ul { padding-left: 1.4em; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.9rem; }
+    th, td { border: 1px solid #e4e4e7; padding: 10px 14px; text-align: left; vertical-align: top; }
+    th { background: #f4f4f5; font-weight: 600; }
+    code { background: #f4f4f5; padding: 1px 5px; border-radius: 4px; font-size: 0.88em; }
+    a { color: #2563eb; }
+    .highlight { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 14px 18px; border-radius: 4px; margin: 20px 0; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Blip — Privacy Policy</h1>
+  <p class="meta">Effective date: 2026-06-01 &nbsp;·&nbsp; Extension version 3.0.1</p>
+
+  <div class="highlight">
+    <strong>Short version:</strong> Blip does not collect, transmit, or store any data on any developer-owned server.
+    Everything stays on your device, except the requests you trigger to your chosen AI provider (using your own API key)
+    and the ordinary YouTube requests needed to read the video you are watching. If you use OpenRouter model suggestions
+    or provider web-search features, those requests are handled by the relevant third-party provider as described below.
+  </div>
+
+  <h2>1. Who we are</h2>
+  <p>
+    Blip is a Chrome extension created by an independent developer. Contact: <a href="mailto:exergyoflife@gmail.com">exergyoflife@gmail.com</a>.
+  </p>
+
+  <h2>2. Data stored on your device</h2>
+  <p>All data Blip stores lives in <code>chrome.storage.local</code> on your device only.
+     It is never synced to your Google account and never uploaded anywhere.</p>
+
+  <table>
+    <tr>
+      <th>What</th>
+      <th>Why</th>
+      <th>How long</th>
+    </tr>
+    <tr>
+      <td>AI provider API key(s)</td>
+      <td>Required to make AI requests on your behalf</td>
+      <td>Until you clear it in Settings</td>
+    </tr>
+    <tr>
+      <td>Blip settings and preferences</td>
+      <td>Remembers your selected provider, model, enabled state, web-search setting, and reply length setting</td>
+      <td>Until you change them</td>
+    </tr>
+    <tr>
+      <td>Video transcript text (up to 8 videos)</td>
+      <td>Avoids re-fetching the same video when you reopen the chat</td>
+      <td>Evicted automatically as new videos are added</td>
+    </tr>
+    <tr>
+      <td>AI-generated video summaries and section summaries (up to 20 videos)</td>
+      <td>Avoids re-running summarisation on the same video</td>
+      <td>Evicted automatically as new videos are added</td>
+    </tr>
+    <tr>
+      <td>Chat history (up to 30 conversations)</td>
+      <td>Restores your conversation when you reopen the chat</td>
+      <td>Evicted oldest-first; cleared with the trash button</td>
+    </tr>
+    <tr>
+      <td>Internal debug log (up to 300 entries)</td>
+      <td>Lets you export a diagnostic file if something goes wrong; entries may include timestamps, event names, error messages, and redacted diagnostic details</td>
+      <td>Oldest entries dropped automatically; clearable in Settings</td>
+    </tr>
+    <tr>
+      <td>Model capability flags (which models support web search)</td>
+      <td>Avoids retrying a feature a model has already rejected</td>
+      <td>Expires automatically after 24 hours</td>
+    </tr>
+    <tr>
+      <td>Model context-window sizes</td>
+      <td>Remembers how much text a model accepts, to fit requests</td>
+      <td>Expires automatically after 30 days</td>
+    </tr>
+  </table>
+  <p>Some locally stored items may contain personal information if it appears in your API key,
+     your questions, chat history, debug details, or the video content you choose to process.
+     None of this leaves your device except as described below.</p>
+
+  <h2>3. Data transmitted to third-party AI providers</h2>
+  <p>When you ask Blip to summarise a video or answer a question, Blip sends the following to
+     your selected AI provider <em>using your own API key</em>:</p>
+  <ul>
+    <li>The cleaned text transcript of the current YouTube video</li>
+    <li>The current video's title</li>
+    <li>Your question (for Q&amp;A requests)</li>
+    <li>Recent chat history turns (to give the model conversation context)</li>
+    <li>Your API key (in the <code>Authorization</code> / <code>x-goog-api-key</code> request header)</li>
+  </ul>
+  <p>
+    If web search is enabled for a supported model, or if you explicitly ask Blip for current or web information,
+    Blip may attach that provider's web-search tool/options to the AI request. Any search, grounding, retrieval,
+    or related data handling is performed by the selected AI provider, not by a Blip server.
+  </p>
+  <p>This transmission happens <strong>directly from your browser to the provider</strong> — Blip has no server of its own.
+     The provider you choose and their data-handling practices apply:</p>
+  <ul>
+    <li><strong>Google Gemini (AI Studio)</strong> — <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
+    <li><strong>OpenAI</strong> — <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">OpenAI Privacy Policy</a></li>
+    <li><strong>OpenRouter</strong> — <a href="https://openrouter.ai/privacy" target="_blank" rel="noopener">OpenRouter Privacy Policy</a></li>
+    <li><strong>NVIDIA NIM</strong> — <a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/" target="_blank" rel="noopener">NVIDIA Privacy Policy</a></li>
+  </ul>
+
+  <h2>4. YouTube caption data</h2>
+  <p>
+    To build a transcript, Blip reads YouTube's own caption data from the page you are already viewing.
+    It calls YouTube's public InnerTube API endpoint (<code>youtube.com/youtubei/v1/player</code>)
+    using YouTube's own public API key (embedded in every YouTube page) and your existing YouTube session cookies —
+    exactly the same request YouTube's own player makes. No additional YouTube account credentials are collected or stored.
+  </p>
+  <p>
+    When you select OpenRouter as your provider, the settings page also fetches the live model list from
+    <code>openrouter.ai/api/v1/models</code> to show you up-to-date model suggestions.
+    Blip does not intentionally send personal data in this request, but ordinary network metadata such as your IP address
+    and user agent may be visible to OpenRouter.
+  </p>
+
+  <h2>5. What Blip does NOT do</h2>
+  <ul>
+    <li>Blip does not have a backend server or database.</li>
+    <li>Blip does not collect analytics, crash reports, or usage telemetry.</li>
+    <li>Blip does not create or require a user account.</li>
+    <li>Blip does not sell, share, or monetise any data.</li>
+    <li>Blip does not use <code>chrome.storage.sync</code> — your API keys are never pushed to your Google account or any other device.</li>
+    <li>Blip does not inject advertising or track your browsing on any site other than YouTube.</li>
+    <li>Blip does not run on non-YouTube sites, and its chat feature activates only on YouTube watch pages.</li>
+  </ul>
+
+  <h2>6. Permissions and why they are needed</h2>
+  <ul>
+    <li><strong>storage</strong> — to save your settings and the cached data listed in section 2 on your device.</li>
+    <li><strong>scripting</strong> — to add Blip's chat panel to the YouTube watch page and identify the video you are viewing.</li>
+    <li><strong>Access to youtube.com</strong> — to support YouTube's single-page navigation, show the chat on watch pages, and read the public video data needed to answer about the current video.</li>
+    <li><strong>Access to the AI provider hosts</strong> (Google, OpenAI, OpenRouter, NVIDIA) — to send your request directly from your browser to whichever provider you selected with your own API key.</li>
+  </ul>
+  <p>Blip requests no other permissions, and none are used outside the purposes above.</p>
+
+  <h2>7. Your controls</h2>
+  <ul>
+    <li><strong>Delete API keys</strong> — Open Blip Settings, clear the key field, and save.</li>
+    <li><strong>Clear the current video's chat history</strong> — Use the trash icon in the chat panel, or uninstall the extension to remove all extension data.</li>
+    <li><strong>Export / clear debug logs</strong> — Available in Blip Settings under "Debug logs".</li>
+    <li><strong>Remove all extension data</strong> — Uninstall Blip. Chrome removes all <code>chrome.storage.local</code> data on uninstall.</li>
+  </ul>
+
+  <h2>8. Children</h2>
+  <p>Blip is not directed at children under 13. It does not knowingly collect data from children.</p>
+
+  <h2>9. Changes to this policy</h2>
+  <p>If this policy changes materially, the effective date at the top of this page will be updated.
+     Continued use of the extension after a change constitutes acceptance of the revised policy.</p>
+
+  <h2>10. Contact</h2>
+  <p>Questions or requests: <a href="mailto:exergyoflife@gmail.com">exergyoflife@gmail.com</a></p>
+</main>
+</body>
+</html>
