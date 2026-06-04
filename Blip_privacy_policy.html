@@ -33,7 +33,7 @@
 <body>
 <main>
   <h1>Blip — Privacy Policy</h1>
-  <p class="meta">Effective date: 2026-06-01 &nbsp;·&nbsp; Extension version 3.0.1</p>
+  <p class="meta">Effective date: 2026-06-02 &nbsp;·&nbsp; Extension version 4.0.0</p>
 
   <div class="highlight">
     <strong>Short version:</strong> Blip does not collect, transmit, or store any data on any developer-owned server.
@@ -84,8 +84,8 @@
     </tr>
     <tr>
       <td>Internal debug log (up to 300 entries)</td>
-      <td>Lets you export a diagnostic file if something goes wrong; entries may include timestamps, event names, error messages, and redacted diagnostic details</td>
-      <td>Oldest entries dropped automatically; clearable in Settings</td>
+      <td>Internal diagnostics used while developing Blip; entries may include timestamps, event names, error messages, and redacted diagnostic details (not surfaced in the user interface)</td>
+      <td>Oldest entries dropped automatically; fully removed when you uninstall</td>
     </tr>
     <tr>
       <td>Model capability flags (which models support web search)</td>
@@ -93,9 +93,9 @@
       <td>Expires automatically after 24 hours</td>
     </tr>
     <tr>
-      <td>Model context-window sizes</td>
+      <td>Model context-window sizes (detected or manually set)</td>
       <td>Remembers how much text a model accepts, to fit requests</td>
-      <td>Expires automatically after 30 days</td>
+      <td>Auto-detected values expire after 30 days; a value you set manually persists until you change it</td>
     </tr>
   </table>
   <p>Some locally stored items may contain personal information if it appears in your API key,
@@ -134,10 +134,12 @@
     exactly the same request YouTube's own player makes. No additional YouTube account credentials are collected or stored.
   </p>
   <p>
-    When you select OpenRouter as your provider, the settings page also fetches the live model list from
-    <code>openrouter.ai/api/v1/models</code> to show you up-to-date model suggestions.
-    Blip does not intentionally send personal data in this request, but ordinary network metadata such as your IP address
-    and user agent may be visible to OpenRouter.
+    When you select OpenRouter as your provider, Blip fetches the live model list from
+    <code>openrouter.ai/api/v1/models</code> to show up-to-date model suggestions and to read a model's
+    context-window size. For the same context-window purpose, Blip may make one small model-metadata request to
+    your selected provider when you use a model it does not already know
+    (Gemini <code>models.get</code> or NVIDIA <code>v1/models</code>). These requests carry no transcript or
+    question; ordinary network metadata such as your IP address and user agent may be visible to the provider.
   </p>
 
   <h2>5. What Blip does NOT do</h2>
@@ -154,7 +156,7 @@
   <h2>6. Permissions and why they are needed</h2>
   <ul>
     <li><strong>storage</strong> — to save your settings and the cached data listed in section 2 on your device.</li>
-    <li><strong>scripting</strong> — to add Blip's chat panel to the YouTube watch page and identify the video you are viewing.</li>
+    <li><strong>scripting</strong> — to add Blip's chat panel to the YouTube watch page, identify the video you are viewing, read its public caption data, and (only when you click a timestamp in an answer) seek the player to that moment.</li>
     <li><strong>Access to youtube.com</strong> — to support YouTube's single-page navigation, show the chat on watch pages, and read the public video data needed to answer about the current video.</li>
     <li><strong>Access to the AI provider hosts</strong> (Google, OpenAI, OpenRouter, NVIDIA) — to send your request directly from your browser to whichever provider you selected with your own API key.</li>
   </ul>
@@ -164,7 +166,6 @@
   <ul>
     <li><strong>Delete API keys</strong> — Open Blip Settings, clear the key field, and save.</li>
     <li><strong>Clear the current video's chat history</strong> — Use the trash icon in the chat panel, or uninstall the extension to remove all extension data.</li>
-    <li><strong>Export / clear debug logs</strong> — Available in Blip Settings under "Debug logs".</li>
     <li><strong>Remove all extension data</strong> — Uninstall Blip. Chrome removes all <code>chrome.storage.local</code> data on uninstall.</li>
   </ul>
 
