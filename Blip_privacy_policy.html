@@ -33,13 +33,17 @@
 <body>
 <main>
   <h1>Blip — Privacy Policy</h1>
-  <p class="meta">Effective date: 2026-06-02 &nbsp;·&nbsp; Extension version 4.0.0</p>
+  <p class="meta">Effective date: 2026-06-07 &nbsp;·&nbsp; Extension version 4.0.0</p>
 
   <div class="highlight">
     <strong>Short version:</strong> Blip does not collect, transmit, or store any data on any developer-owned server.
     Everything stays on your device, except the requests you trigger to your chosen AI provider (using your own API key)
-    and the ordinary YouTube requests needed to read the video you are watching. If you use OpenRouter model suggestions
-    or provider web-search features, those requests are handled by the relevant third-party provider as described below.
+    and the ordinary YouTube requests needed to read the captions of a video you are watching. On other web pages,
+    Blip reads the page's own readable content directly from the page you already have open — only when you open the
+    chat and ask for a summary or answer. If you click "Give me an eye", Blip captures only the visible part of the
+    current tab and sends that screenshot directly to your selected AI provider if the model supports image input.
+    If you use OpenRouter model suggestions or provider web-search features, those requests are handled by the
+    relevant third-party provider as described below.
   </div>
 
   <h2>1. Who we are</h2>
@@ -64,23 +68,28 @@
     </tr>
     <tr>
       <td>Blip settings and preferences</td>
-      <td>Remembers your selected provider, model, enabled state, web-search setting, and reply length setting</td>
+      <td>Remembers your selected provider, model, enabled state, web-search setting, reply length, page extraction depth, and collapsed icon size</td>
       <td>Until you change them</td>
     </tr>
     <tr>
-      <td>Video transcript text (up to 8 videos)</td>
-      <td>Avoids re-fetching the same video when you reopen the chat</td>
-      <td>Evicted automatically as new videos are added</td>
+      <td>Chat bubble position and appearance</td>
+      <td>Remembers where you dragged the Blip bubble on the page and whether you chose the small, medium, or large collapsed icon</td>
+      <td>Until you move it again or uninstall the extension</td>
     </tr>
     <tr>
-      <td>AI-generated video summaries and section summaries (up to 20 videos)</td>
-      <td>Avoids re-running summarisation on the same video</td>
-      <td>Evicted automatically as new videos are added</td>
+      <td>Video transcript / extracted page text (cache)</td>
+      <td>Avoids re-fetching or re-reading the same video or page when you reopen the chat</td>
+      <td>Evicted automatically as new pages/videos are added</td>
+    </tr>
+    <tr>
+      <td>AI-generated summaries and section summaries (up to 20)</td>
+      <td>Avoids re-running summarisation on the same video or page</td>
+      <td>Evicted automatically as new entries are added</td>
     </tr>
     <tr>
       <td>Chat history (up to 30 conversations)</td>
-      <td>Restores your conversation when you reopen the chat</td>
-      <td>Evicted oldest-first; cleared with the trash button</td>
+      <td>Restores your conversation when you reopen a video, page, or streaming platform</td>
+      <td>Evicted oldest-first; cleared with the clear-chat button</td>
     </tr>
     <tr>
       <td>Internal debug log (up to 300 entries)</td>
@@ -88,9 +97,9 @@
       <td>Oldest entries dropped automatically; fully removed when you uninstall</td>
     </tr>
     <tr>
-      <td>Model capability flags (which models support web search)</td>
-      <td>Avoids retrying a feature a model has already rejected</td>
-      <td>Expires automatically after 24 hours</td>
+      <td>Model capability flags (which models support web search or image input)</td>
+      <td>Avoids retrying a feature a model has already rejected and prevents screenshot requests to text-only models</td>
+      <td>Web-search flags expire after 24 hours; image-input flags expire after 7 days</td>
     </tr>
     <tr>
       <td>Model context-window sizes (detected or manually set)</td>
@@ -103,11 +112,12 @@
      None of this leaves your device except as described below.</p>
 
   <h2>3. Data transmitted to third-party AI providers</h2>
-  <p>When you ask Blip to summarise a video or answer a question, Blip sends the following to
+  <p>When you ask Blip to summarise or answer a question, Blip sends the following to
      your selected AI provider <em>using your own API key</em>:</p>
   <ul>
-    <li>The cleaned text transcript of the current YouTube video</li>
-    <li>The current video's title</li>
+    <li>The cleaned transcript of the current YouTube video, or the readable text content of the current web page</li>
+    <li>The current video or page title</li>
+    <li>A screenshot of the visible tab, only when you click "Give me an eye" or ask a follow-up in that eye tab</li>
     <li>Your question (for Q&amp;A requests)</li>
     <li>Recent chat history turns (to give the model conversation context)</li>
     <li>Your API key (in the <code>Authorization</code> / <code>x-goog-api-key</code> request header)</li>
@@ -126,12 +136,24 @@
     <li><strong>NVIDIA NIM</strong> — <a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/" target="_blank" rel="noopener">NVIDIA Privacy Policy</a></li>
   </ul>
 
-  <h2>4. YouTube caption data</h2>
+  <h2>4. Page, YouTube caption, and screenshot data</h2>
   <p>
-    To build a transcript, Blip reads YouTube's own caption data from the page you are already viewing.
+    On an ordinary web page, Blip reads the page's own readable content (headings, paragraphs, lists, tables, code, diagrams/charts, and definition lists)
+    directly from the page you already have open, using the browser's DOM. This happens locally, only when you open
+    the chat and ask for a summary or answer, and involves no third-party request.
+  </p>
+  <p>
+    On YouTube, to build a transcript Blip reads YouTube's own caption data from the page you are already viewing.
     It calls YouTube's public InnerTube API endpoint (<code>youtube.com/youtubei/v1/player</code>)
     using YouTube's own public API key (embedded in every YouTube page) and your existing YouTube session cookies —
     exactly the same request YouTube's own player makes. No additional YouTube account credentials are collected or stored.
+  </p>
+  <p>
+    When you click "Give me an eye", Blip captures the currently visible area of the active tab using Chrome's
+    <code>captureVisibleTab</code> API. Blip hides its own widget before capture and restores it immediately after, so
+    its UI does not cover the content you asked about. The screenshot is not stored by Blip; it is sent directly to your
+    selected AI provider for that request only, and only when the selected model supports image input. Follow-up questions
+    in the eye tab capture a fresh screenshot.
   </p>
   <p>
     When you select OpenRouter as your provider, Blip fetches the live model list from
@@ -149,15 +171,17 @@
     <li>Blip does not create or require a user account.</li>
     <li>Blip does not sell, share, or monetise any data.</li>
     <li>Blip does not use <code>chrome.storage.sync</code> — your API keys are never pushed to your Google account or any other device.</li>
-    <li>Blip does not inject advertising or track your browsing on any site other than YouTube.</li>
-    <li>Blip does not run on non-YouTube sites, and its chat feature activates only on YouTube watch pages.</li>
+    <li>Blip does not inject advertising and does not track, log, or report your browsing.</li>
+    <li>Blip reads a page's content only when you open the chat and ask for a summary or answer — it does not read or transmit page content in the background.</li>
+    <li>Blip captures a screenshot only when you click "Give me an eye" or ask a follow-up in the eye tab.</li>
   </ul>
 
   <h2>6. Permissions and why they are needed</h2>
   <ul>
     <li><strong>storage</strong> — to save your settings and the cached data listed in section 2 on your device.</li>
-    <li><strong>scripting</strong> — to add Blip's chat panel to the YouTube watch page, identify the video you are viewing, read its public caption data, and (only when you click a timestamp in an answer) seek the player to that moment.</li>
-    <li><strong>Access to youtube.com</strong> — to support YouTube's single-page navigation, show the chat on watch pages, and read the public video data needed to answer about the current video.</li>
+    <li><strong>scripting</strong> — to add Blip's chat panel to the current page and read the content needed to answer about it: a web page's readable text, or a YouTube video's public caption data, and (only when you click a timestamp in a YouTube answer) seek the player to that moment. It is also used to hide and restore Blip's own widget around a user-triggered screenshot.</li>
+    <li><strong>Access to web pages (https) and youtube.com</strong> — to show the chat on whichever page you are viewing and to read that page's content when you ask for a summary or answer. Page content is read only at that moment, never in the background.</li>
+    <li><strong>Access to all URLs</strong> — required by Chrome for <code>captureVisibleTab</code> from Blip's in-page "Give me an eye" button. The screenshot is captured only after your click or eye-tab follow-up.</li>
     <li><strong>Access to the AI provider hosts</strong> (Google, OpenAI, OpenRouter, NVIDIA) — to send your request directly from your browser to whichever provider you selected with your own API key.</li>
   </ul>
   <p>Blip requests no other permissions, and none are used outside the purposes above.</p>
@@ -165,7 +189,8 @@
   <h2>7. Your controls</h2>
   <ul>
     <li><strong>Delete API keys</strong> — Open Blip Settings, clear the key field, and save.</li>
-    <li><strong>Clear the current video's chat history</strong> — Use the trash icon in the chat panel, or uninstall the extension to remove all extension data.</li>
+    <li><strong>Change preferences</strong> — Open Blip Settings to change provider/model, web search, reply length, page extraction depth, context-window overrides, or collapsed icon size.</li>
+    <li><strong>Clear the current chat history</strong> — Use the clear-chat button in the chat panel, or uninstall the extension to remove all extension data.</li>
     <li><strong>Remove all extension data</strong> — Uninstall Blip. Chrome removes all <code>chrome.storage.local</code> data on uninstall.</li>
   </ul>
 
