@@ -32,9 +32,9 @@
 </head>
 <body>
 <main>
-<h1>Blip — Privacy Policy</h1>
+<h1>Blip privacy policy</h1>
 
-<p class="meta">Effective date: October 18, 2026. Applies to Blip extension version 5.0.1 and its optional local transcription helper.</p>
+<p class="meta">Effective date: October 23, 2026. Applies to Blip extension version 5.0.4, browser speech features and optional local transcription/read-aloud helpers.</p>
 
 <p>Blip provides summaries and answers about the YouTube video or web page you are viewing. You choose the AI provider and supply your own API key. Blip sends requests directly to that provider; the bundled extension does not use a developer-operated AI proxy, advertising service, or analytics collector.</p>
 
@@ -56,44 +56,70 @@
 
 <p>Each provider&#x27;s privacy policy, account settings, retention rules, model availability, and charges apply to its processing. Blip cannot delete copies already retained by those services or promise that a provider never uses data for model improvement. Review the policies and settings for the service you use.</p>
 
-<p>YouTube is contacted to retrieve video information, captions, and relevant comments. Other sites may receive requests for caption resources needed to understand their current page. Network services receive ordinary connection information such as your IP address and request metadata.</p>
-
 <ul>
-<li>Google Gemini (AI Studio): <a href="https://policies.google.com/privacy">Google Privacy Policy</a></li>
-<li>OpenAI: <a href="https://openai.com/policies/privacy-policy">OpenAI Privacy Policy</a></li>
-<li>OpenRouter: <a href="https://openrouter.ai/privacy">OpenRouter Privacy Policy</a></li>
-<li>NVIDIA NIM: <a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/">NVIDIA Privacy Policy</a></li>
+<li>Google Gemini AI Studio: <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a></li>
+<li>OpenAI: <a href="https://openai.com/policies/privacy-policy">https://openai.com/policies/privacy-policy</a></li>
+<li>OpenRouter: <a href="https://openrouter.ai/privacy">https://openrouter.ai/privacy</a></li>
+<li>NVIDIA NIM: <a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/">https://www.nvidia.com/en-us/about-nvidia/privacy-policy/</a></li>
 </ul>
+
+<p>YouTube is contacted to retrieve video information, captions, and relevant comments. Other sites may receive requests for caption resources needed to understand their current page. Network services receive ordinary connection information such as your IP address and request metadata.</p>
 
 <h2>Optional local transcription</h2>
 
 <p>Local transcription is disabled by default and requires separate helper setup and a compatible computer. The extension creates a platform-specific installer ZIP from packaged files. You extract and run its unsigned script yourself. Setup downloads external runtimes and dependencies, including Python tooling, Node.js, speech libraries, and the Windows speech runtime where applicable. Model downloads contact Hugging Face and its download infrastructure; setup also uses upstream software distribution services such as GitHub, Node.js, and Python package services. These services receive normal download-request information. Blip does not send them your video transcript for transcription.</p>
 
+<p>Reconnect helper can generate a small transcription registration-repair ZIP. You extract and run it yourself. It reuses an existing runtime and model files without downloading them, and registers the current extension ID while keeping previously registered valid IDs for the same helper launcher.</p>
+
 <p>The helper downloads video audio from YouTube and performs speech recognition on your computer. Temporary audio is removed after processing, errors, or normal cancellation. An abrupt operating-system or process failure can leave temporary files requiring local cleanup. Downloaded models and runtime files remain on disk for reuse.</p>
 
 <p><strong>Local speech recognition does not make AI chat offline:</strong> the resulting transcript is sent through the normal selected-provider flow for summaries and answers.</p>
 
-<p><strong>Use Chrome session</strong> is selected by default within the optional local transcription settings. Cookie access still requires Chrome&#x27;s separate permission grant. When that option is selected, permission has been granted, and local transcription is used, Blip reads YouTube-domain cookies from the current tab&#x27;s Chrome cookie store. It passes them through the local native messaging connection to an in-memory, domain-scoped cookie jar for authenticated YouTube audio requests. Cookies are not exported, saved by the helper, included in AI prompts, or read directly from Chrome&#x27;s on-disk cookie database. Model downloads do not use these cookies. Disabling the session option stops their use for subsequent transcription jobs; Chrome&#x27;s extension settings allow you to manage granted permissions.</p>
+<p><strong>Use my YouTube session</strong> is selected by default within the optional local transcription settings. Cookie access still requires Chrome&#x27;s separate permission grant. When that option is selected, permission has been granted, and local transcription is used, Blip reads YouTube-domain cookies from the current tab&#x27;s Chrome cookie store. It passes them through the local native messaging connection to an in-memory, domain-scoped cookie jar for authenticated YouTube audio requests. Cookies are not exported, saved by the helper, included in AI prompts, or read directly from Chrome&#x27;s on-disk cookie database. Model downloads do not use these cookies. Disabling the session option stops their use for subsequent transcription jobs; Chrome&#x27;s extension settings allow you to manage granted permissions.</p>
+
+<h2>Read aloud and optional AI voices</h2>
+
+<p>Automatic voice passes the visible completed reply or fixed Settings sample to an explicitly selected eligible local system voice through Chrome text-to-speech. Remote and third-party extension voices are excluded. Reading an existing reply requires no provider key. Playback starts on request; automatic reading is off. Voice/model/language/rate preferences are stored locally. A temporary Boolean session marker supports interrupted-playback cleanup without retaining text or audio.</p>
+
+<p>Browser Kokoro downloads verified model data only after an explicit action and optional Hugging Face host grant. Executable JavaScript, WASM and phonemizer assets are bundled. Verified models and voice data remain in extension Cache Storage for reuse until removed or evicted. Normal q8 inference uses CPU; the separate diagnostic page can explicitly compare CPU/GPU using a fixed sample. Text and generated audio are not sent to a TTS service, saved as audio files, or logged.</p>
+
+<p>Native Kokoro/Pocket speech uses the separately installed <code>com.blip.local_tts</code> helper on compatible computers. Setup creates an unsigned installer ZIP that you extract and run. It downloads external Python tooling, a native engine, phonemizer and dependencies; Windows may need the official Microsoft C++ runtime installer and normal administrator approval. Model/voice/reference downloads use Hugging Face infrastructure. Upstream distribution services receive ordinary download metadata. Inference uses verified local files and sends no reading text or audio to an external speech service. Models and runtime files persist locally.</p>
+
+<p>You can select and download multiple Kokoro voices across supported languages. The helper reuses shared model files and retains successfully installed voices if you cancel or interrupt a later download. Removing a model in setup also removes preset voice files no longer needed by other installed models; custom recordings have a separate delete control. Read-aloud text and generated audio pass between the extension and the local helper through Chrome native messaging for playback on your computer. Once the required files are installed, speech synthesis runs locally without a cloud speech fallback.</p>
+
+<p>For a custom Pocket English voice, you explicitly select a permitted 1–30 second recording. Chrome decodes/resamples it locally and the helper stores a normalized 24 kHz mono PCM16 WAV copy plus voice metadata in its private data directory. The original selected file is untouched. Derived reference conditioning stays in worker memory; persistent upstream latent caching is disabled. Delete selected custom voice removes the stored normalized copy and metadata. Model removal does not remove separately managed custom recordings. Recordings are not uploaded.</p>
+
+<h2>Microphone assist</h2>
+
+<p>Dictation requires an explicit Moonshine English model download and a microphone grant in a visible extension-origin setup tab. The grant check closes its temporary stream immediately. Recording starts only when you click the chat microphone. Audio is processed locally in an extension offscreen context, is not uploaded, saved or logged, and does not pass through the AI provider. Provisional text stays outside chat history. Stop ends capture before final inference; Cancel and owner teardown discard speech previews. Sessions are limited to 60 seconds.</p>
+
+<p>Final text is inserted into the editable unsent draft. Only pressing Send submits it through the normal selected-provider flow; sent questions then follow normal chat-history retention. The microphone model stays in a separate extension Cache Storage inventory until removed in setup or evicted. No native helper is required.</p>
 
 <h2>Storage, retention, and your controls</h2>
 
-<p>Extension settings, API keys, chat history, bounded content caches, model capability information, widget preferences, setup state, and diagnostic logs are stored locally using Chrome extension storage, not Chrome Sync. Blip does not add its own encryption layer to this local storage; device and browser access controls protect it. Provider traffic uses HTTPS; native messaging connects processes on the same computer.</p>
+<p>Extension settings, API keys, chat history, bounded content caches, model capability information, widget preferences, setup state, and diagnostic logs are stored locally using Chrome extension storage, not Chrome Sync. Browser speech/microphone model data additionally uses local extension Cache Storage; native helper models and voice references use separate OS data directories. Blip does not add its own encryption layer to this local storage; device and browser access controls protect it. Provider traffic uses HTTPS; native messaging connects processes on the same computer.</p>
 
 <p>You can change or remove provider keys in Settings, clear diagnostic logs, and clear the learned context-window cache. Clearing that context-window cache does not delete all transcripts or conversations. Removing the extension removes its Chrome-managed extension storage. Exported chat or debug files remain wherever you saved them.</p>
 
 <p>The native helper is installed separately and remains after the extension is removed. Its runtime is at <code>~/.local/share/blip-local-stt</code> on macOS or <code>%LOCALAPPDATA%\Blip\local-stt</code> on Windows. To remove it, remove that runtime directory and its native messaging registration: <code>~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.blip.local_stt.json</code> on macOS, or <code>HKCU\Software\Google\Chrome\NativeMessagingHosts\com.blip.local_stt</code> on Windows. Downloaded speech models remain separately in your Hugging Face cache until you remove the relevant model files. Shared caches or tooling used by other applications should be managed separately.</p>
+
+<p>The separate speech helper is installed at <code>~/.local/share/blip-local-tts</code> on Mac or <code>%LOCALAPPDATA%\Blip\local-tts</code> on Windows. Its model/normalized reference data is at <code>~/.cache/blip-local-tts</code> or <code>%LOCALAPPDATA%\Blip\local-tts-data</code>. Close playback, remove the helper directory and its <code>com.blip.local_tts</code> registration from <code>~/Library/Application Support/Google/Chrome/NativeMessagingHosts</code> on Mac or <code>HKCU\Software\Google\Chrome\NativeMessagingHosts</code> on Windows to uninstall. Remove the speech data directory separately if desired. Repair retains model data. Removing the Chrome extension does not uninstall either native helper or its data. Browser microphone and TTS models can be removed separately from their setup pages.</p>
 
 <h2>Permissions and activation</h2>
 
 <ul>
 <li><strong>activeTab:</strong> grants temporary access to the current tab after a user gesture for toolbar activation and visible-tab screenshots. On ordinary HTTPS pages, click the Blip toolbar icon to activate the widget. Browser-protected pages are unsupported.</li>
 <li><strong>storage:</strong> saves settings, provider keys, history, caches, local setup state, and diagnostic logs on your device.</li>
-<li><strong>unlimitedStorage:</strong> allows long transcripts, derived summaries, and conversations to coexist in extension storage without the default quota interrupting these features. Caches and logs have application-level bounds. Speech models are stored separately by the helper.</li>
+<li><strong>unlimitedStorage:</strong> supports long transcripts, summaries, conversations and persistent verified browser speech/microphone model caches. Caches/logs have application-level bounds; native helper models are stored separately.</li>
+<li><strong>tts:</strong> reads completed replies with an eligible local system voice.</li>
+<li><strong>offscreen:</strong> supports local inference workers, speech playback and authorized microphone capture in an extension-owned document outside the web page.</li>
 <li><strong>scripting:</strong> injects the packaged interface and content extractors into authorized tabs, seeks YouTube timestamps, and hides/restores the widget for screenshots.</li>
 <li><strong>YouTube host access:</strong> enables the widget and caption, metadata, and relevant comment retrieval on YouTube while Blip is enabled. Caption retrieval may use the page&#x27;s existing YouTube session. Optional native-helper cookie access is described above.</li>
 <li><strong>AI provider host access:</strong> permits direct requests to the Google Gemini, OpenAI, OpenRouter, and NVIDIA endpoints when those services are used.</li>
-<li><strong>nativeMessaging (optional):</strong> connects to the separately installed local transcription helper for hardware checks, model management, and speech recognition.</li>
-<li><strong>downloads (optional):</strong> saves the helper installer ZIP generated from bundled files and reveals that installer in your download folder. You must extract and run it separately.</li>
+<li><strong>nativeMessaging (optional):</strong> connects to the separate local transcription and read-aloud helpers for runtime checks, model/reference management, speech recognition and synthesis.</li>
+<li><strong>downloads (optional):</strong> saves transcription/speech helper installer or transcription reconnect ZIPs generated from bundled files and reveals them in your download folder. You must extract and run them separately.</li>
+<li><strong>Hugging Face hosts (optional):</strong> allow explicitly requested browser model-data downloads from <code>huggingface.co</code> and <code>*.hf.co</code>.</li>
+<li><strong>Microphone browser grant:</strong> authorizes local capture after visible setup and an explicit chat microphone click; page scripts receive no microphone grant.</li>
 <li><strong>cookies (optional):</strong> enables the YouTube-only Chrome session reuse described above, after a separate permission grant.</li>
 </ul>
 
@@ -101,7 +127,7 @@
 
 <h2>Data use and sharing</h2>
 
-<p>Blip uses the data described here to provide its summaries, questions and answers, content analysis, local transcription, history, and diagnostics. It does not sell user data, use it for targeted advertising, or use it to determine creditworthiness. Transfers to your selected AI provider and the service requests described above support these features. The developer does not receive your API keys, chats, transcripts, or cookies through a built-in collection endpoint. Information you voluntarily send through a support channel is received by that channel&#x27;s operator.</p>
+<p>Blip uses the data described here to provide its summaries, questions and answers, content analysis, local transcription, read-aloud, editable dictation, local custom voices, history, and diagnostics. It does not sell user data, use it for targeted advertising, or use it to determine creditworthiness. Transfers to your selected AI provider and the service requests described above support these features. The developer does not receive your API keys, chats, transcripts, or cookies through a built-in collection endpoint. Information you voluntarily send through a support channel is received by that channel&#x27;s operator.</p>
 
 <p>Blip&#x27;s use and transfer of information received through Chrome APIs adheres to the Chrome Web Store User Data Policy, including its Limited Use requirements.</p>
 
