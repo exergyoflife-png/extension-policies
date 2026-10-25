@@ -34,7 +34,7 @@
 <main>
 <h1>Blip privacy policy</h1>
 
-<p class="meta">Effective date: October 23, 2026. Applies to Blip extension version 5.0.4, browser speech features and optional local transcription/read-aloud helpers.</p>
+<p class="meta">Effective date: October 26, 2026. Applies to Blip extension version 5.0.6, browser speech features and optional local transcription/read-aloud helpers.</p>
 
 <p>Blip provides summaries and answers about the YouTube video or web page you are viewing. You choose the AI provider and supply your own API key. Blip sends requests directly to that provider; the bundled extension does not use a developer-operated AI proxy, advertising service, or analytics collector.</p>
 
@@ -43,6 +43,7 @@
 <ul>
 <li><strong>Provider settings and authentication:</strong> your chosen provider, model, API key, and feature preferences are stored in Chrome&#x27;s local extension storage. API keys authenticate requests to the corresponding provider. They are not supplied to page scripts or included as content in AI prompts.</li>
 <li><strong>Page and video content:</strong> Blip reads relevant URLs, titles, readable page text, captions, and video metadata. When captions are unavailable, it may use relevant video comments, a visible-tab image when supported, and provider search features to construct an answer. These fallbacks may produce less reliable results than a transcript.</li>
+<li><strong>Documents and spreadsheet cells:</strong> when used with Blip, PDF text, CSV/TSV/XLSX cells and authorized Google Sheets ranges may be read to provide summaries and answers. These inputs, screenshots and questions may contain names, contact details, personal communications, health, financial or location information. Relevant content can be sent to your selected AI provider; Blip does not create a separate advertising or sensitive-interest profile from it.</li>
 <li><strong>Conversations:</strong> your questions, relevant conversation context, extracted source text, generated summaries, chapters, and answers are processed for the features you use. Local chat history and content caches allow conversations to resume.</li>
 <li><strong>Images:</strong> visible-tab screenshots used for image analysis, and supported captionless-video fallback, are sent to your selected provider when an image-capable model is used. Screenshots may contain personal information visible on the page.</li>
 <li><strong>Diagnostics:</strong> Blip keeps a bounded local log of operational events and errors and attempts to redact common secrets. You can clear it or export it in Settings. Exporting saves a file locally; sending that file to someone is a separate action you control. Redaction is not a guarantee that every piece of sensitive page or error information is removed.</li>
@@ -65,9 +66,27 @@
 
 <p>YouTube is contacted to retrieve video information, captions, and relevant comments. Other sites may receive requests for caption resources needed to understand their current page. Network services receive ordinary connection information such as your IP address and request metadata.</p>
 
+<h2>Optional Google Sheets connection</h2>
+
+<p>You choose <strong>Connect Google Sheets</strong> to authorize Blip through Google OAuth. Blip requests the <strong>spreadsheets.readonly</strong> scope, which permits seeing all Google Sheets spreadsheets your account can access. This scope is broader than a single worksheet or cell range. Blip uses it to read selected spreadsheets opened in, or linked from, a page where you use Blip. It does not crawl Google Drive or enumerate all your spreadsheets. The connection does not permit Blip to edit, create or delete spreadsheets.</p>
+
+<p>Blip retrieves spreadsheet titles, worksheet names, grid metadata and bounded cell ranges. Cells can include text, underlying typed values, formatted display text, formulas and Google-calculated results. These values may contain personal or sensitive information. Worksheet and range references identify the evidence; unread ranges remain explicitly limited.</p>
+
+<p><strong>Relevant spreadsheet content, your question and conversation context are sent directly to your selected AI provider when Blip generates a summary or answer.</strong> The provider receives this information to generate the response. Blip does not send Google OAuth tokens, Google passwords or Google authentication cookies to AI providers. Choose the account, sheets and AI provider you are comfortable using together. Provider terms, retention and account settings apply as described above; Blip cannot erase data already retained by a provider.</p>
+
+<p>Google OAuth tokens are managed by Chrome&#x27;s identity token cache and used in the extension&#x27;s background worker for requests to Google. Blip does not write raw tokens into its settings, conversations, source indexes or diagnostic logs, and does not provide them to webpage scripts. A local Boolean connection flag is stored to remember whether you connected. Checking connection status does not read spreadsheet cells.</p>
+
+<p>Normalized spreadsheet evidence is held in bounded worker memory and may be reused briefly between requests. Blip does not create a separate persistent collection of your Google workbooks. Questions, relevant excerpts and generated answers retained as conversation history follow the local storage rules below. Google receives authorized API requests and normal connection metadata, such as an IP address and request details.</p>
+
+<p>Use <strong>Google Sheets connection → Disconnect Google Sheets</strong> to stop subsequent reads, invalidate worker evidence and clear Chrome&#x27;s cached authorization. Disconnecting does not delete existing chats, exports or data already sent to a provider. You can separately remove Blip&#x27;s app grant through your <a href="https://myaccount.google.com/connections">Google Account connections</a>, and remove conversation history through Blip&#x27;s chat controls or the extension&#x27;s stored data. Google testing restrictions, sheet-sharing permissions and organization policies can limit access; Blip does not bypass them. Other Blip features do not require this connection.</p>
+
+<h2>Other spreadsheet and online document sources</h2>
+
+<p>When selected by the page&#x27;s extraction flow, accessible CSV, TSV, XLSX and PDF resources may be downloaded for local parsing by code bundled with the extension. Readable HTML tables may also be inspected. Additional resource hosts require site access where necessary. These document downloads omit cookies and credentials; login-protected, encrypted or unsupported files can remain unreadable. Blip does not execute spreadsheet formulas. Relevant extracted values and document excerpts can be sent to your selected AI provider through the normal summary and answer flow. Downloads and parsing have size, time and coverage limits.</p>
+
 <h2>Optional local transcription</h2>
 
-<p>Local transcription is disabled by default and requires separate helper setup and a compatible computer. The extension creates a platform-specific installer ZIP from packaged files. You extract and run its unsigned script yourself. Setup downloads external runtimes and dependencies, including Python tooling, Node.js, speech libraries, and the Windows speech runtime where applicable. Model downloads contact Hugging Face and its download infrastructure; setup also uses upstream software distribution services such as GitHub, Node.js, and Python package services. These services receive normal download-request information. Blip does not send them your video transcript for transcription.</p>
+<p>Automatic YouTube transcription is disabled by default. Local transcription requires separate helper setup and a compatible computer. The extension creates a platform-specific installer ZIP from packaged files. You extract and run its unsigned script yourself. Setup downloads external runtimes and dependencies, including Python tooling, Node.js, speech libraries, and the Windows speech runtime where applicable. Model downloads contact Hugging Face and its download infrastructure; setup also uses upstream software distribution services such as GitHub, Node.js, and Python package services. These services receive normal download-request information. Blip does not send them your video transcript for transcription.</p>
 
 <p>Reconnect helper can generate a small transcription registration-repair ZIP. You extract and run it yourself. It reuses an existing runtime and model files without downloading them, and registers the current extension ID while keeping previously registered valid IDs for the same helper launcher.</p>
 
@@ -76,6 +95,30 @@
 <p><strong>Local speech recognition does not make AI chat offline:</strong> the resulting transcript is sent through the normal selected-provider flow for summaries and answers.</p>
 
 <p><strong>Use my YouTube session</strong> is selected by default within the optional local transcription settings. Cookie access still requires Chrome&#x27;s separate permission grant. When that option is selected, permission has been granted, and local transcription is used, Blip reads YouTube-domain cookies from the current tab&#x27;s Chrome cookie store. It passes them through the local native messaging connection to an in-memory, domain-scoped cookie jar for authenticated YouTube audio requests. Cookies are not exported, saved by the helper, included in AI prompts, or read directly from Chrome&#x27;s on-disk cookie database. Model downloads do not use these cookies. Disabling the session option stops their use for subsequent transcription jobs; Chrome&#x27;s extension settings allow you to manage granted permissions.</p>
+
+<h2>Optional non-YouTube video source access</h2>
+
+<p>When you invoke Blip on a webpage, it can inspect permitted embedded frames and caption tracks associated with the page. If another host is needed, <strong>Review site access</strong> lists the discovered hosts in an extension-owned page. You grant or revoke each host separately. The extension declares optional HTTPS host support to accommodate caption CDNs discovered at runtime, but does not request access to all websites. Host grants remain until revoked here or in Chrome&#x27;s extension settings.</p>
+
+<p>Optional frame-discovery (<code>webNavigation</code>) permission may also be requested when Chrome cannot enumerate the page&#x27;s frames. Chrome may describe this as browsing history access. Blip uses it only to identify frames in the tab where you invoked the feature; it does not subscribe to navigation events, collect browser-wide history or crawl other tabs.</p>
+
+<p>Caption requests omit cookies and authentication headers. Site-issued signed caption URLs may be used transiently to retrieve the caption content. Resource source-URL metadata removes credentials, query parameters and fragments. Source indexes and pending access requests are bounded and held in memory; pending review tickets expire or become invalid after page/document changes. Relevant caption excerpts can be sent to your selected AI provider to answer your question. Caption acquisition does not record tab audio or bypass protected player access.</p>
+
+<h3>Background non-YouTube audio transcription</h3>
+
+<p>When local transcription is enabled, activating Blip on a non-YouTube page can prepare a supported video&#x27;s audio without playback. Usable captions are checked first. A single captionless video prepares automatically; pages with multiple videos show checkboxes in Sources before downloading. That same panel supports additional selections and cancellation. A small status reports background work. Questions can use finished sections while remaining audio is still processing; partial coverage is explicitly identified.</p>
+
+<p>The local helper downloads accessible media directly from the source website or its associated public media hosts, decodes local files and performs recognition using installed models. It does not record tab playback or your microphone. Temporary media is removed after processing, failure or normal cancellation; operating-system failure can leave files needing local cleanup. Switching tabs keeps preparation running; navigating or closing the original tab cancels its unfinished jobs. Supported formats/providers, duration, byte, queue and processing limits apply. Protected or unsupported media remains unavailable.</p>
+
+<p>Downloads are attempted without cookies first. If authentication is needed, the existing trusted site-access page can request Chrome&#x27;s cookie/website permission and your additional approval for the specific site. This host grant covers that registrable site and its subdomains to expose parent-domain login cookies; unrelated hosted tenants remain separate. The helper receives applicable cookies from the original tab&#x27;s Chrome cookie store in a job-local memory jar. Domain, host-only, path, HTTPS and applicable partition boundaries are maintained. Cookie values are not saved to cookie files, included in prompts/logs or sent to an AI provider, and are sent only to approved associated request origins, not every subdomain covered by Chrome&#x27;s permission. You can stop session reuse through the same site-access flow or revoke Chrome permissions. Cookie/access changes invalidate affected private transcript cache entries. This is access reuse for supported downloaders, not a guarantee that every signed-in player is downloadable.</p>
+
+<p>Completed non-YouTube transcripts are cached in trusted extension storage on this device for seven days, subject to additional size/count eviction. Expired entries cannot be reused; an alarm cleans them while Chrome runs and cleanup also runs at the next worker startup/access. Source/metadata validation is required for reuse. In-progress transcript sections stay in memory and are discarded on cancellation/failure. Private-window transcripts do not enter the ordinary profile cache. <strong>Clear non-YouTube transcripts</strong> in existing local-transcription details clears saved and derived evidence. It does not delete conversation history or provider records. Transcript excerpts reach your selected AI provider through the normal answer/summary flow; downloaded audio does not go to that provider.</p>
+
+<h2>PDF reader and annotations</h2>
+
+<p>You explicitly choose or drop a local PDF into Blip reader. The selected file is rendered and its text is indexed locally using bundled PDF.js code. Raw PDF bytes stay in reader/worker memory and are not saved in extension storage or uploaded as a PDF file. Reloading the reader requires choosing the file again. Relevant extracted text, document title, questions and summaries use the normal selected AI provider flow when you request a summary or answer. Saved chats follow the existing local conversation policy and are matched using a content digest, not a filesystem path. The original tab address is temporarily retained in extension session storage so Back to original PDF can return to the viewer; it is not included in prompts or diagnostic logs by the reader. This workflow does not require access to other local files or a file-URL permission grant.</p>
+
+<p>Supported HTTPS PDF links can also be opened in the reader after you approve access to the document&#x27;s origin. These downloads omit cookies and credentials and remain subject to size and access limits. The document bytes and unsaved highlights, underlines, notes or annotation removals are kept in reader memory. <strong>Save As</strong> or <strong>Download PDF</strong> writes an annotated copy to the location you choose; Blip does not automatically upload that PDF or its annotations to a storage service. Saved PDFs and exported chats remain on your computer until you remove them. Closing or reloading can discard unsaved annotation changes.</p>
 
 <h2>Read aloud and optional AI voices</h2>
 
@@ -112,7 +155,12 @@
 <li><strong>storage:</strong> saves settings, provider keys, history, caches, local setup state, and diagnostic logs on your device.</li>
 <li><strong>unlimitedStorage:</strong> supports long transcripts, summaries, conversations and persistent verified browser speech/microphone model caches. Caches/logs have application-level bounds; native helper models are stored separately.</li>
 <li><strong>tts:</strong> reads completed replies with an eligible local system voice.</li>
+<li><strong>identity (optional):</strong> obtains Google OAuth tokens after you choose Connect Google Sheets. Only read-only spreadsheet access is requested; Google passwords are not supplied to Blip.</li>
+<li><strong>Google Sheets API host (optional):</strong> permits the background worker to contact <code>sheets.googleapis.com</code> for authorized spreadsheet reads after connection.</li>
+<li><strong>webNavigation (optional):</strong> identifies embedded frames in the specific tab where you invoke Blip when ordinary frame discovery is insufficient. It is not used to monitor navigation across websites.</li>
+<li><strong>Additional resource hosts (optional):</strong> retrieve selected caption tracks, embedded sources and supported online documents from specific hosts you approve through site access.</li>
 <li><strong>offscreen:</strong> supports local inference workers, speech playback and authorized microphone capture in an extension-owned document outside the web page.</li>
+<li><strong>alarms:</strong> schedules deletion of expired locally cached non-YouTube transcripts.</li>
 <li><strong>scripting:</strong> injects the packaged interface and content extractors into authorized tabs, seeks YouTube timestamps, and hides/restores the widget for screenshots.</li>
 <li><strong>YouTube host access:</strong> enables the widget and caption, metadata, and relevant comment retrieval on YouTube while Blip is enabled. Caption retrieval may use the page&#x27;s existing YouTube session. Optional native-helper cookie access is described above.</li>
 <li><strong>AI provider host access:</strong> permits direct requests to the Google Gemini, OpenAI, OpenRouter, and NVIDIA endpoints when those services are used.</li>
@@ -120,16 +168,16 @@
 <li><strong>downloads (optional):</strong> saves transcription/speech helper installer or transcription reconnect ZIPs generated from bundled files and reveals them in your download folder. You must extract and run them separately.</li>
 <li><strong>Hugging Face hosts (optional):</strong> allow explicitly requested browser model-data downloads from <code>huggingface.co</code> and <code>*.hf.co</code>.</li>
 <li><strong>Microphone browser grant:</strong> authorizes local capture after visible setup and an explicit chat microphone click; page scripts receive no microphone grant.</li>
-<li><strong>cookies (optional):</strong> enables the YouTube-only Chrome session reuse described above, after a separate permission grant.</li>
+<li><strong>cookies (optional):</strong> enables the YouTube session option and separately approved per-site session reuse for supported non-YouTube downloads.</li>
 </ul>
 
 <p>Blip does not request permanent host access to all websites. Its automatically registered content scripts run on YouTube; ordinary pages use temporary active-tab access. In supported streaming-platform sessions, navigating between titles while Blip is active can trigger additional summaries. Opening the chat can automatically start a summary; a separately typed question is not required for every request.</p>
 
 <h2>Data use and sharing</h2>
 
-<p>Blip uses the data described here to provide its summaries, questions and answers, content analysis, local transcription, read-aloud, editable dictation, local custom voices, history, and diagnostics. It does not sell user data, use it for targeted advertising, or use it to determine creditworthiness. Transfers to your selected AI provider and the service requests described above support these features. The developer does not receive your API keys, chats, transcripts, or cookies through a built-in collection endpoint. Information you voluntarily send through a support channel is received by that channel&#x27;s operator.</p>
+<p>Blip uses the data described here to provide its summaries, questions and answers, content analysis, authorized Google Sheets reading, PDF reading and annotations, local transcription, read-aloud, editable dictation, local custom voices, history, and diagnostics. It does not sell user data, use it for targeted advertising, or use it to determine creditworthiness. Transfers to your selected AI provider and the service requests described above support these features. The developer does not receive your API keys, chats, transcripts, or cookies through a built-in collection endpoint. Information you voluntarily send through a support channel is received by that channel&#x27;s operator.</p>
 
-<p>Blip&#x27;s use and transfer of information received through Chrome APIs adheres to the Chrome Web Store User Data Policy, including its Limited Use requirements.</p>
+<p>Blip uses Google Sheets data to provide the user-facing reading, summary and question-answering features described above. Relevant excerpts are transferred to the AI provider you select for that purpose after you connect Google Sheets. The developer does not sell Google Sheets data or use it for advertising, creditworthiness decisions or a developer-operated model-training service. Google API data is subject to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including applicable Limited Use requirements. Blip&#x27;s use and transfer of information received through Chrome APIs adheres to the Chrome Web Store User Data Policy, including its Limited Use requirements.</p>
 
 <h2>Children</h2>
 
@@ -137,7 +185,7 @@
 
 <h2>Changes and contact</h2>
 
-<p>Updates to this policy will be published at <a href="https://exergyoflife-png.github.io/extension-policies/Blip_privacy_policy.html">https://exergyoflife-png.github.io/extension-policies/Blip_privacy_policy.html</a> with a revised effective date. The developer is an independent developer. For privacy or support questions, contact <a href="mailto:exergyoflife@gmail.com">exergyoflife@gmail.com</a>. Requests concerning data already sent to an AI provider must also be directed to that provider.</p>
+<p>Updates to this policy will be published at <a href="https://exergyoflife-png.github.io/extension-policies/Blip_privacy_policy.html">https://exergyoflife-png.github.io/extension-policies/Blip_privacy_policy.html</a> with a revised effective date. The developer is an independent developer. For privacy or support questions, contact exergyoflife@gmail.com. Requests concerning data already sent to an AI provider must also be directed to that provider.</p>
 </main>
 </body>
 </html>
